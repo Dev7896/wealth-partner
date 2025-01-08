@@ -1,0 +1,164 @@
+:root {
+  --primary-color: #8353e2;
+  --regular-radius: 8px;
+}
+
+.otp {
+  display: flex;
+  gap: 1rem;
+  margin-top: 12px;
+}
+
+.otp-input {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  /* font-family: "20px"; */
+  border: 1px solid var(--primary-color);
+  border-radius: 5px;
+  padding: 0px;
+}
+input {
+  width: auto;
+  height: auto;
+  padding: 8px 10px;
+  padding-left: 40px;
+  border-radius: var(--regular-radius);
+  border: 1px solid var(--primary-color);
+  box-sizing: border-box;
+}
+input:focus {
+  outline: 1px dashed var(--primary-color);
+  border: none;
+}
+input::placeholder {
+  /* font-size: large; */
+  color: var(--primary-color);
+}
+form {
+  width: 400px;
+  height: 400px;
+  display: grid;
+  grid-template-rows: repeat(10,1fr);
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 16px 10%;
+  /* margin: 0px auto; */
+}
+
+.error {
+  color: red;
+  margin-top: 2px;
+  margin-bottom: 0px;
+}
+i.for-icon {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  color: var(--primary-color);
+}
+i.right {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+button {
+  background-color: var(--primary-color);
+  font-size: large;
+  color: white;
+  outline: none;
+  border: none;
+  border-radius: var(--regular-radius);
+  justify-self: flex-start;
+  align-self: center;
+  padding: 8px 24px;
+}
+button:hover{
+  cursor: pointer;
+  background-color: var(--primary-color);
+  box-shadow: 0px 2px 8px 0px var(--primary-color);
+}
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#submit {
+  padding: 12px 16px;
+}
+.link {
+  color: var(--primary-color);
+}
+
+.tag {
+  font-size: x-large;
+  padding-left: 10%;
+}
+.container-tag {
+  position: relative;
+  display: inline-block;
+}
+
+.circle {
+  position: relative;
+  z-index: 1;
+}
+
+.tag {
+  /* font-size: x-large; */
+  position: absolute;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust positioning from the center */
+  z-index: 2; /* Ensure the text is on top of the circle */
+  color: black; /* Change color as needed */
+  font-size: large; /* Adjust font size for better fit */
+  text-align: center;
+}
+.form-wrapper {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  /* align-items: center; */
+  padding: 0px 10%;
+}
+.form-wrapper .image {
+  width: auto;
+  height: 500px;
+}
+
+@media only screen and (max-width: 768px) {
+  .form-wrapper {
+    width: auto;
+    height: auto;
+    padding: 0px;
+  }
+  .form-wrapper .image {
+    display: none;
+  }
+  form {
+    width: auto;
+    height: auto;
+    padding: 16px 5%;
+  }
+  input {
+    width: auto;
+    height: auto;
+    padding: 18px 10px;
+    padding-left: 40px;
+    border-radius: var(--regular-radius);
+    border: 1px solid var(--primary-color);
+  }
+  button{
+    padding: 16px 24px;
+  }
+  i.for-icon{
+    top: 20px;
+  }
+  i.right {
+    top: 20px;
+  }
+}
