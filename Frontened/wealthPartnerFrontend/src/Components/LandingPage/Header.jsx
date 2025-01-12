@@ -38,7 +38,7 @@ export default function Header() {
   }, [isOpen]);
 
   return (
-    <header>
+    <header className="animate-bounceIn sticky top-0 z-50 bg-white">
       <div className="logo">
         <Link to="/" className="link-logo">
           Wealth <br /> Partner
@@ -47,16 +47,24 @@ export default function Header() {
       <nav className="nav-links">
         <ul className="links">
           <li>
-            <Link to="/">Home</Link>
+            <a href="#home" onClick={toggleSidePanel}>
+              Home
+            </a>
           </li>
           <li>
-            <Link to="/about">About</Link>
+            <a href="#services" onClick={toggleSidePanel}>
+              Services
+            </a>
           </li>
           <li>
-            <Link to="/services">Services</Link>
+            <a href="#faq" onClick={toggleSidePanel}>
+              FAQ
+            </a>
           </li>
           <li>
-            <Link to="/contact">Contact</Link>
+            <a href="#contacts" onClick={toggleSidePanel}>
+              Contact
+            </a>
           </li>
         </ul>
         <button className="login-btn">
@@ -79,24 +87,24 @@ export default function Header() {
           <nav>
             <ul className="links">
               <li>
-                <Link to="/" onClick={toggleSidePanel}>
+                <a href="#home" onClick={toggleSidePanel}>
                   Home
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/about" onClick={toggleSidePanel}>
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link to="/services" onClick={toggleSidePanel}>
+                <a href="#services" onClick={toggleSidePanel}>
                   Services
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/contact" onClick={toggleSidePanel}>
+                <a href="#faq" onClick={toggleSidePanel}>
+                  FAQ
+                </a>
+              </li>
+              <li>
+                <a href="#contacts" onClick={toggleSidePanel}>
                   Contact
-                </Link>
+                </a>
               </li>
               <li>
                 <button className="login-btn">

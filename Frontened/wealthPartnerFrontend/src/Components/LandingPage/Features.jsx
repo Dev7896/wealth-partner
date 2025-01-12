@@ -22,8 +22,8 @@ export default function Features() {
   ];
   return (
     <>
-      <div className="features mt-12">
-        <div style={{ display: "flex", justifyContent: "center" }}>
+      <div id="services" className="features mt-12">
+        <div className="mb-8" style={{ display: "flex", justifyContent: "center" }}>
           <div className="container-tag">
             <h1 className="title tag">Features</h1>
             <img style={{ width: "200px" }} src={loop4} alt="" />

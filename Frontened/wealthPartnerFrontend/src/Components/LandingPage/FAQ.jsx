@@ -34,7 +34,7 @@ export default function FAQ() {
 
   return (
     <>
-      <div className="faq-section m-10">
+      <div id="faq" className="faq-section m-10">
         <div className="container">
           <div className="flex justify-center">
             <div className="container-tag text-center">
