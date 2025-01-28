@@ -48,5 +48,10 @@ export default {
       },
     },
   },
+  variants: {
+    extend: {
+      display: ['landscape'], // Example for display property
+    },
+  },
   plugins: [],
 };

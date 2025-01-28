@@ -234,7 +234,7 @@ export default function Footer() {
         <hr class=" my-8 border-gray-200" />
 
         <p class="text-sm text-center text-gray-600">
-          © Copyright 2021, All Rights Reserved by Wealth Partner
+          © Copyright 2025, All Rights Reserved by Wealth Partner
         </p>
       </div>
     </section>
