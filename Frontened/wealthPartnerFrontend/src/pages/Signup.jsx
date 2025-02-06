@@ -1,16 +1,19 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import VerifOtp from "./VerifyOtp";
-import { verifyEmail } from "./SignupUtility.js";
+import VerifOtp from "../Components/LoginSections/VerifyOtp.jsx";
+import { verifyEmail } from "../Components/LoginSections/SignupUtility.js";
 import { Link } from "react-router-dom";
 import swal from "sweetalert2";
-import loop from "../../assets/loop.svg";
+import loop from "../assets/loop.svg";
 import axios from "axios";
-import { showMessage } from "./SignupUtility.js";
-import Header from "../LandingPage/Header.jsx";
+import { showMessage } from "../Components/LoginSections/SignupUtility.js";
+import Header from "../Components/LandingPage/Header.jsx";
 import { useNavigate } from "react-router-dom";
-import signup from '../../assets/signup.svg'
+import signup from "../assets/signup.svg";
+import LoadingPage from "../Components/loader.jsx";
+import { FlashOnRounded } from "@mui/icons-material";
+import { ClipLoader } from 'react-spinners';
 // import '../../styles/LandingPage.css'
 
 export default function Signup() {
@@ -32,9 +35,11 @@ export default function Signup() {
   let [resetOtpKey, setResetOtpKey] = useState(0);
   let [otpRequestSend, setOtpRequestSend] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleEmailSubmit = async (data) => {
+    setLoading(true);
     const { email } = data;
     // const emailVerified = await verifyEmail(email);
 
@@ -51,11 +56,12 @@ export default function Signup() {
 
       const result = response.data;
 
-      console.log(result);
+      // console.log(result);
 
       if (result.success) {
         showMessage(result.success, "success");
         setOtpRequestSend(!otpRequestSend);
+        setLoading(false);
         // setStep(2);
       } else {
         showMessage(result.error, "error");
@@ -109,6 +115,7 @@ export default function Signup() {
 
   return (
     <>
+      {/* {loading && <LoadingPage />} */}
       <Header />
       <div className="form-wrapper">
         <form
@@ -169,8 +176,17 @@ export default function Signup() {
               <i class="ri-mail-fill ri-lg for-icon"></i>
               {errors.email && <p className="error">{errors.email.message}</p>}
             </div>
-            <button disabled={isSubmitting}>send</button>
-
+            {/* <button disabled={isSubmitting}>{(loading) ? "Loading..." : "Send"} </button> */}
+            <button
+              disabled={isSubmitting}
+              className="flex items-center justify-center"
+            >
+              {loading ? (
+                <ClipLoader size={24} color={"#fff"} loading={loading} />
+              ) : (
+                "Send"
+              )}
+            </button>
             {otpRequestSend && (
               <div>
                 <VerifOtp

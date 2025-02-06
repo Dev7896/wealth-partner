@@ -1,14 +1,14 @@
-import loop from "../../assets/loop.svg";
+import loop from "../assets/loop.svg";
 import { useForm } from "react-hook-form";
-import { showMessage } from "./SignupUtility.js";
+import { showMessage } from "../Components/LoginSections/SignupUtility.js";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../../styles/Form.css";
+import "../styles/Form.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Header from "../LandingPage/Header.jsx";
+import Header from "../Components/LandingPage/Header.jsx";
 import Cookies from "js-cookie";
-import login from "../../assets/login.svg";
+import login from "../assets/login.svg";
 
 export default function Login() {
   const {
@@ -43,9 +43,21 @@ export default function Login() {
           sameSite: "Strict", // Prevents CSRF attacks
           path: "/", // Accessible to the whole site
         });
+        Cookies.set('email' ,email, {
+          expires: 3, // 3 days
+          secure: true, // Ensures the cookie is sent over HTTPS
+          sameSite: "Strict", // Prevents CSRF attacks
+          path: "/", // Accessible to the whole site
+        });
 
         showMessage(result.success, "success");
-        navigate("/mainpage");
+        if(result.paymentDone === false){
+          console.log(result.paymentDone) ;
+          navigate("/pricing");
+        }else {
+          navigate("/mainpage");
+        }
+        
       }
     } catch (error) {
       showMessage("Invalid email or password", "error");

@@ -91,9 +91,9 @@ const InvoicePreview = ({ invoiceData, onEdit, onDownload }) => {
                   <tr key={index} className="border-b">
                     <td className="px-4 py-2 text-gray-700">{item.name}</td>
                     <td className="px-4 py-2 text-right text-gray-700">{item.quantity}</td>
-                    <td className="px-4 py-2 text-right text-gray-700">${item.unitPrice.toFixed(2)}</td>
+                    <td className="px-4 py-2 text-right text-gray-700">{item.price}</td>
                     <td className="px-4 py-2 text-right text-gray-700">
-                      ${(item.quantity * item.unitPrice).toFixed(2)}
+                      {item.quantity * item.price}
                     </td>
                   </tr>
                 ))

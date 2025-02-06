@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import InvoiceFormWrapper from "../Components/Invoice/InvoiceForm/InvoiceFormWrapper";
 import InvoicePreview from "../Components/Invoice/InvoicePreview/InvoicePreview";
-import { prepareData } from "../utils/prepareData"; // Utility function to create invoiceData
+import { prepareData } from "../Components/Invoice/InvoiceUtils"; // Utility function to create invoiceData
 import jsPDF from "jspdf";
 
 const Invoice = () => {
@@ -31,7 +31,7 @@ const Invoice = () => {
     doc.text("Items:", 10, 70);
     invoiceData.items.forEach((item, index) => {
       doc.text(
-        `${index + 1}. ${item.name} (Qty: ${item.quantity}, Price: $${item.unitPrice})`,
+        `${index + 1}. ${item.name} (Qty: ${item.quantity}, Price: $${item.price})`,
         10,
         80 + index * 10
       );

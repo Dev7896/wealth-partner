@@ -17,10 +17,20 @@ export const prepareData = (formData) => {
       paymentTerms: formData.paymentTerms || "Net 30",
       items: formData.items || [],
       totalAmount: formData.items?.reduce(
-        (total, item) => total + item.quantity * item.unitPrice,
+        (total, item) => total + item.quantity * item.price,
         0
       ) || 0,
       notes: formData.notes || "Payment is due within 30 days. Thank you for your business!",
     };
   };
+
+  export const calculateTotals = ({ items = [], taxRate = 0, discount = 0, shippingCost = 0 }) => {
+    const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+    const tax = (subtotal * taxRate) / 100;
+    const discountAmount = (subtotal * discount) / 100;
+    const total = subtotal + tax - discountAmount + shippingCost;
+  
+    return { subtotal, tax, discountAmount, total };
+  };
+  
   

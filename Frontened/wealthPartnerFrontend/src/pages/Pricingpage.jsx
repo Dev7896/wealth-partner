@@ -1,3 +1,5 @@
+import Payment from "../Components/payment/payment";
+
 export default function Pricingpage() {
   const pricingFeatures = [
     "Access to all financial tools in one platform.",
@@ -29,7 +31,8 @@ export default function Pricingpage() {
           </p>
           <p className="mb-8 text-3xl font-bold">enterprise plan</p>
           <p>best plan for the enterprises</p>
-          <button className="mt-8 landscape:self-start">purchase plan</button>
+          {/* <button className="mt-8 landscape:self-start">purchase plan</button> */}
+          <Payment />
         </div>
         <div className="p-10 rounded-3xl bg-gray-50 ">
           <ul className="flex flex-col gap-4">

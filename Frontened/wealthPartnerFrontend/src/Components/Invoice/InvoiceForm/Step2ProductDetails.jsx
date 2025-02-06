@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
+import AddItems from "./AddItems";
 
-const Step2InvoiceDetails = ({ formData, setFormData, nextStep, prevStep }) => {
+const Step2ProductDetails = ({ formData, setFormData, nextStep, prevStep }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleItemsChange = (items) => {
+    setFormData({ ...formData, items }); // Update items in formData
   };
 
   const handleNext = (e) => {
@@ -17,8 +22,11 @@ const Step2InvoiceDetails = ({ formData, setFormData, nextStep, prevStep }) => {
   };
 
   return (
-    <form onSubmit={handleNext} className="space-y-6 p-6 bg-white shadow-md rounded-md w-full flex flex-col overflow-auto">
-      <h2 className="text-3xl font-bold text-gray-800">Invoice Details</h2>
+    <form
+      onSubmit={handleNext}
+      className="space-y-6 p-6 bg-white shadow-md rounded-md w-full flex flex-col overflow-auto"
+    >
+      <h2 className="text-3xl font-bold text-gray-800">Product Details</h2>
 
       {/* Invoice Number */}
       <div className="flex flex-col">
@@ -69,28 +77,8 @@ const Step2InvoiceDetails = ({ formData, setFormData, nextStep, prevStep }) => {
         />
       </div>
 
-      {/* Payment Terms */}
-      <div className="flex flex-col">
-        <label htmlFor="paymentTerms" className="text-sm font-medium text-gray-700">
-          Payment Terms
-        </label>
-        <select
-          id="paymentTerms"
-          name="paymentTerms"
-          value={formData.paymentTerms || ""}
-          onChange={handleChange}
-          required
-          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="" disabled>
-            Select payment terms
-          </option>
-          <option value="Net 7">Net 7</option>
-          <option value="Net 15">Net 15</option>
-          <option value="Net 30">Net 30</option>
-          <option value="Net 45">Net 45</option>
-        </select>
-      </div>
+      {/* Add Items */}
+      <AddItems items={formData.items || []} onItemsChange={handleItemsChange} />
 
       {/* Notes */}
       <div className="flex flex-col">
@@ -127,4 +115,4 @@ const Step2InvoiceDetails = ({ formData, setFormData, nextStep, prevStep }) => {
   );
 };
 
-export default Step2InvoiceDetails;
+export default Step2ProductDetails;

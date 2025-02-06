@@ -1,0 +1,27 @@
+.chart {
+    width: 100%;
+    /* max-width: 500px; */
+    height: 700px;
+    margin: 0px auto;
+    display: flex;
+    flex-flow: nowrap column;
+    gap: 2rem;
+    padding: 8px;
+  
+  }
+  
+
+  @media only screen and (orientation: landscape) {
+    .chart {
+      width: 70%;
+      height: auto;
+      display: grid;
+      grid-template-columns: repeat(2 , 1fr);
+      grid-template-rows: repeat(2 , minmax(200px , auto));
+      gap: 2rem;
+      justify-items: center;
+      align-items: center;
+      margin: 0px auto;
+    }
+
+  }

@@ -1,16 +1,16 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import VerifOtp from "./VerifyOtp";
-import { verifyEmail } from "./SignupUtility.js";
+import VerifOtp from "../Components/LoginSections/VerifyOtp.jsx";
+import { verifyEmail } from "../Components/LoginSections/SignupUtility.js";
 import { Link } from "react-router-dom";
 import swal from "sweetalert2";
-import loop from "../../assets/loop.svg";
+import loop from "../assets/loop.svg";
 import axios from "axios";
-import { showMessage } from "./SignupUtility.js";
-import Header from "../LandingPage/Header.jsx";
+import { showMessage } from "../Components/LoginSections/SignupUtility.js";
+import Header from "../Components/LandingPage/Header.jsx";
 import { useNavigate } from "react-router-dom";
-import forget from '../../assets/forget.svg'
+import forget from '../assets/forget.svg'
 
 export default function Signup() {
   const {

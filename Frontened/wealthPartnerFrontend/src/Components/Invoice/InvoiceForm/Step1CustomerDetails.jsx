@@ -1,5 +1,3 @@
-// Step1CustomerDetails.jsx
-
 import React from "react";
 
 const Step1CustomerDetails = ({ formData, setFormData, nextStep }) => {
@@ -14,7 +12,10 @@ const Step1CustomerDetails = ({ formData, setFormData, nextStep }) => {
   };
 
   return (
-    <form onSubmit={handleNext} className="space-y-6 p-6 bg-white shadow-md rounded-md flex flex-col w-full overflow-auto">
+    <form
+      onSubmit={handleNext}
+      className="space-y-6 p-6 bg-white shadow-md rounded-md flex flex-col w-full overflow-auto"
+    >
       <h2 className="text-3xl font-bold text-gray-800">Customer Details</h2>
 
       {/* Customer Name */}
@@ -34,16 +35,33 @@ const Step1CustomerDetails = ({ formData, setFormData, nextStep }) => {
         />
       </div>
 
-      {/* Email Address */}
+      {/* Customer Address */}
       <div className="flex flex-col">
-        <label htmlFor="email" className="text-sm font-medium text-gray-700">
+        <label htmlFor="customerAddress" className="text-sm font-medium text-gray-700">
+          Customer Address
+        </label>
+        <textarea
+          id="customerAddress"
+          name="customerAddress"
+          value={formData.customerAddress || ""}
+          onChange={handleChange}
+          required
+          placeholder="Enter customer's full address"
+          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          rows="3"
+        />
+      </div>
+
+      {/* Customer Email */}
+      <div className="flex flex-col">
+        <label htmlFor="customerEmail" className="text-sm font-medium text-gray-700">
           Email Address
         </label>
         <input
           type="email"
-          id="email"
-          name="email"
-          value={formData.email || ""}
+          id="customerEmail"
+          name="customerEmail"
+          value={formData.customerEmail || ""}
           onChange={handleChange}
           required
           placeholder="Enter customer's email"
@@ -51,16 +69,16 @@ const Step1CustomerDetails = ({ formData, setFormData, nextStep }) => {
         />
       </div>
 
-      {/* Phone Number */}
+      {/* Customer Phone */}
       <div className="flex flex-col">
-        <label htmlFor="phoneNumber" className="text-sm font-medium text-gray-700">
+        <label htmlFor="customerPhone" className="text-sm font-medium text-gray-700">
           Phone Number
         </label>
         <input
           type="tel"
-          id="phoneNumber"
-          name="phoneNumber"
-          value={formData.phoneNumber || ""}
+          id="customerPhone"
+          name="customerPhone"
+          value={formData.customerPhone || ""}
           onChange={handleChange}
           required
           placeholder="Enter customer's phone number"
@@ -68,40 +86,7 @@ const Step1CustomerDetails = ({ formData, setFormData, nextStep }) => {
         />
       </div>
 
-      {/* Billing Address */}
-      <div className="flex flex-col">
-        <label htmlFor="billingAddress" className="text-sm font-medium text-gray-700">
-          Billing Address
-        </label>
-        <textarea
-          id="billingAddress"
-          name="billingAddress"
-          value={formData.billingAddress || ""}
-          onChange={handleChange}
-          required
-          placeholder="Enter billing address"
-          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          rows="3"
-        />
-      </div>
-
-      {/* Shipping Address */}
-      <div className="flex flex-col">
-        <label htmlFor="shippingAddress" className="text-sm font-medium text-gray-700">
-          Shipping Address (Optional)
-        </label>
-        <textarea
-          id="shippingAddress"
-          name="shippingAddress"
-          value={formData.shippingAddress || ""}
-          onChange={handleChange}
-          placeholder="Enter shipping address if different"
-          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          rows="3"
-        />
-      </div>
-
-      {/* Tax ID */}
+      {/* Tax Identification Number */}
       <div className="flex flex-col">
         <label htmlFor="taxId" className="text-sm font-medium text-gray-700">
           Tax Identification Number (Optional)
@@ -121,6 +106,7 @@ const Step1CustomerDetails = ({ formData, setFormData, nextStep }) => {
       <div className="text-right">
         <button
           type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Next
         </button>

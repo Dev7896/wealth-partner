@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { HashLink } from "react-router-hash-link";
+import React from 'react'
+import { useRef , useState , useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../../styles/LandingPage.css";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +13,6 @@ export default function Header() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Ensure the click is outside the side panel and the hamburger button
       if (
         sidePanelRef.current &&
         !sidePanelRef.current.contains(event.target) &&
@@ -40,31 +40,31 @@ export default function Header() {
   return (
     <header className="animate-bounceIn sticky top-0 z-50 bg-white">
       <div className="logo">
-        <Link to="/" className="link-logo">
+        <HashLink to="/" className="link-logo">
           Wealth <br /> Partner
-        </Link>
+        </HashLink>
       </div>
       <nav className="nav-links">
         <ul className="links">
           <li>
-            <a href="#home" onClick={toggleSidePanel}>
+            <HashLink smooth to="/#home" onClick={toggleSidePanel}>
               Home
-            </a>
+            </HashLink>
           </li>
           <li>
-            <a href="#services" onClick={toggleSidePanel}>
+            <HashLink smooth to="/#services" onClick={toggleSidePanel}>
               Services
-            </a>
+            </HashLink>
           </li>
           <li>
-            <a href="#faq" onClick={toggleSidePanel}>
+            <HashLink smooth to="/#faq" onClick={toggleSidePanel}>
               FAQ
-            </a>
+            </HashLink>
           </li>
           <li>
-            <a href="#contacts" onClick={toggleSidePanel}>
+            <HashLink smooth to="/#contacts" onClick={toggleSidePanel}>
               Contact
-            </a>
+            </HashLink>
           </li>
         </ul>
         <button className="login-btn">
@@ -87,24 +87,24 @@ export default function Header() {
           <nav>
             <ul className="links">
               <li>
-                <a href="#home" onClick={toggleSidePanel}>
+                <HashLink smooth to="/#home" onClick={toggleSidePanel}>
                   Home
-                </a>
+                </HashLink>
               </li>
               <li>
-                <a href="#services" onClick={toggleSidePanel}>
+                <HashLink smooth to="/#services" onClick={toggleSidePanel}>
                   Services
-                </a>
+                </HashLink>
               </li>
               <li>
-                <a href="#faq" onClick={toggleSidePanel}>
+                <HashLink smooth to="/#faq" onClick={toggleSidePanel}>
                   FAQ
-                </a>
+                </HashLink>
               </li>
               <li>
-                <a href="#contacts" onClick={toggleSidePanel}>
+                <HashLink smooth to="/#contacts" onClick={toggleSidePanel}>
                   Contact
-                </a>
+                </HashLink>
               </li>
               <li>
                 <button className="login-btn">

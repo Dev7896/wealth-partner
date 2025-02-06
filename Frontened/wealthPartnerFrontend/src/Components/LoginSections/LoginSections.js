@@ -1,6 +1,6 @@
-export { default as Signup } from "./Signup";
-export { default as Login } from "./Login";
-export { default as ForgetPassword } from "./ForgetPassword";
+export { default as Signup } from "../../pages/Signup";
+export { default as Login } from "../../pages/Login";
+export { default as ForgetPassword } from "../../pages/ForgetPassword";
 import otpGenerator from "otp-generator";
 
 export const sendOtpRequest = async (email) => {
