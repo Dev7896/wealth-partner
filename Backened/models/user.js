@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema(
       type: Date,
       select: false,
     },
+    paymentDone : {
+      type : Boolean,
+      default : false
+    } 
   },
   {
     timestamps: true,

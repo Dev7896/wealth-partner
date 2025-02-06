@@ -4,7 +4,7 @@
   "description": "this is the backend part of our wealth partner",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -22,7 +22,9 @@
     "mongoose": "^8.9.2",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.9",
-    "otp-generator": "^4.0.1"
+    "otp-generator": "^4.0.1",
+    "plaid": "^30.1.0",
+    "razorpay": "^2.9.5"
   },
   "type": "commonjs"
 }

@@ -57,11 +57,11 @@ const validateLogin = async (req, res) => {
       process.env.JWT_SECRET, // Secret key (store securely in .env)
       { expiresIn: "3d" } // Expiry time (3 days)
     );
-
     // Send success response with the token
     return res.status(200).json({
       success: "Login successful",
       token, // Send the token
+      paymentDone: user.paymentDone,
       user: { username: user.username, email: user.email }, // Optional user details
     });
   } catch (error) {
@@ -127,15 +127,24 @@ const otpVerification = async (req, res) => {
   }
 };
 
-const verifyToken = (req, res) => {
-  const { token } = req.body;
+const verifyToken = async (req, res) => {
+  const { email, token } = req.body;
 
-  if (!token) {
+  if (!token && !email) {
     return res.status(401).json({ valid: false });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ email: email });
+    // console.log(user) ;
+    if (!user) {
+      return res.json({ valid: false });
+    }
+    console.log(user.paymentDone);
+    if (user.paymentDone === false) {
+      return res.json({ paymentDone: false });
+    }
     return res.json({ valid: true });
   } catch (error) {
     return res.status(401).json({ valid: false });
