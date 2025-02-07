@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import InvoiceFormWrapper from "../Components/Invoice/InvoiceForm/InvoiceFormWrapper";
 import InvoicePreview from "../Components/Invoice/InvoicePreview/InvoicePreview";
-import { prepareData } from "../Components/Invoice/InvoiceUtils"; // Utility function to create invoiceData
+import { prepareData ,  } from "../Components/Invoice/InvoiceUtils"; // Utility function to create invoiceData
 import jsPDF from "jspdf";
 
 const Invoice = () => {

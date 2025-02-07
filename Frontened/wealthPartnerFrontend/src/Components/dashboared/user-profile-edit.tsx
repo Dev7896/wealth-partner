@@ -1,34 +1,102 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { motion } from "framer-motion"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
-import type { BasicInfo, AccountInfo, Preferences, SupportQuery } from "./user-profile-types"
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { hover, motion } from "framer-motion";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import type {
+  BasicInfo,
+  AccountInfo,
+  Preferences,
+  SupportQuery,
+} from "./user-profile-types";
+import { showMessage } from "../LoginSections/SignupUtility";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function UserProfileEdit() {
-  const [activeTab, setActiveTab] = useState("basic-info")
-  const { toast } = useToast()
+  const [activeTab, setActiveTab] = useState("basic-info");
+  const [userData, setUserData] = useState<any>(null);
+
   const {
     register,
     handleSubmit,
+    setValue,
+    control,
     formState: { errors },
-  } = useForm<BasicInfo & AccountInfo & Preferences & SupportQuery>()
+  } = useForm<BasicInfo & AccountInfo & Preferences & SupportQuery>();
 
-  const onSubmit = (data: BasicInfo & AccountInfo & Preferences & SupportQuery) => {
-    console.log(data)
-    toast({
-      title: "Profile Updated",
-      description: "Your profile has been successfully updated.",
-    })
-  }
+  const fetchUserData = async () => {
+    const email = Cookies.get("email");
+
+    if (!email) return; // Ensure email is available before making the request
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/user/profile",
+        {
+          email,
+        }
+      );
+
+      const userData = response.data;
+      setUserData(userData);
+      console.log(userData);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+  
+
+  useEffect(() => {
+    // ✅ Use an Immediately Invoked Function Expression (IIFE)
+    (async () => {
+      // console.log("user creation happening");
+      await fetchUserData();
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (userData?.dateOfBirth) {
+      // Convert ISODate to YYYY-MM-DD
+      const formattedDate = new Date(userData.dateOfBirth)
+        .toISOString()
+        .split("T")[0];
+      setValue("dateOfBirth", formattedDate);
+    }
+  }, [userData, setValue]);
+
+  const onSubmit = (formData: any) => {
+    const email = Cookies.get("email");
+    const updatedUserData = { ...userData, ...formData }; // Merge old data with new form data
+
+    axios
+      .post("http://localhost:8080/api/user/update", updatedUserData)
+      .then((response) => {
+        showMessage("Profile updated successfully!", "success");
+        setUserData(updatedUserData); // Update state with latest user data
+        console.log(formData)
+        // fetchUserData() ;
+      })
+      .catch((error) => {
+        console.error("Error updating profile:", error);
+        showMessage("Failed to update profile", "error");
+      });
+  };
 
   return (
     <motion.div
@@ -47,16 +115,28 @@ export default function UserProfileEdit() {
         </TabsList>
         <form className=" w-full " onSubmit={handleSubmit(onSubmit)}>
           <TabsContent value="basic-info">
-            <BasicInfoSection register={register} errors={errors} />
+            <BasicInfoSection
+              userData={userData}
+              register={register}
+              errors={errors}
+            />
           </TabsContent>
           <TabsContent value="account-info">
-            <AccountInfoSection register={register} errors={errors} />
+            <AccountInfoSection
+              userData={userData}
+              register={register}
+              errors={errors}
+            />
           </TabsContent>
           <TabsContent value="preferences">
-            <PreferencesSection register={register} />
+            <PreferencesSection userData={userData} register={register} />
           </TabsContent>
           <TabsContent value="support">
-            <SupportSection register={register} errors={errors} />
+            <SupportSection
+              userData={userData}
+              register={register}
+              errors={errors}
+            />
           </TabsContent>
           <Button type="submit" className="mt-4">
             Save Changes
@@ -64,77 +144,172 @@ export default function UserProfileEdit() {
         </form>
       </Tabs>
     </motion.div>
-  )
+  );
 }
 
 // Basic Info Section
-function BasicInfoSection({ register, errors }: { register: any; errors: any }) {
+function BasicInfoSection({
+  register,
+  errors,
+  userData,
+}: {
+  register: any;
+  errors: any;
+  userData: any;
+}) {
+  // Provide default values to prevent accessing properties of null
+  const defaultUserData = userData || {
+    phone: "",
+    dateOfBirth: "",
+    income: "",
+    businessName: "",
+  };
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Basic Information</CardTitle>
-        <CardDescription>Update your basic profile information here.</CardDescription>
+        <CardDescription>
+          Update your basic profile information here.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" {...register("email", { required: "Email is required" })} />
-          {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+          <Input
+            id="email"
+            type="email"
+            {...register("email", { required: "Email is required" })}
+            defaultValue={Cookies.get("email")}
+          />
+          {errors.email && (
+            <p className="text-red-500">{errors.email.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="phone">Phone</Label>
-          <Input id="phone" type="tel" {...register("phone")} />
+          <Input
+            id="phone"
+            type="tel"
+            {...register("phone")}
+            defaultValue={defaultUserData.phone}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="dob">Date of Birth</Label>
-          <Input id="dob" type="date" {...register("dateOfBirth")} />
+          <Input
+            id="dob"
+            type="date"
+            {...register("dateOfBirth")}
+            defaultValue={defaultUserData.dateOfBirth}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="income">Income</Label>
-          <Input id="income" type="number" {...register("income")} />
+          <Input
+            id="income"
+            type="number"
+            {...register("income")}
+            defaultValue={defaultUserData.income}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="businessName">Business Name</Label>
-          <Input id="businessName" {...register("businessName")} />
+          <Input
+            id="businessName"
+            {...register("businessName")}
+            defaultValue={defaultUserData.businessName}
+          />
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // Account Info Section
-function AccountInfoSection({ register, errors }: { register: any; errors: any }) {
+function AccountInfoSection({
+  register,
+  errors,
+  userData,
+}: {
+  register: any;
+  errors: any;
+  userData: any;
+}) {
+  // Provide default values to prevent accessing properties of null
+  const defaultUserData = userData || {
+    username: "",
+    loginInfo: "",
+    deviceInfo: "",
+    securityAnswer: "",
+  };
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Account Information</CardTitle>
-        <CardDescription>Manage your account details and security settings.</CardDescription>
+        <CardDescription>
+          Manage your account details and security settings.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="username">Username</Label>
-          <Input id="username" {...register("username", { required: "Username is required" })} />
-          {errors.username && <p className="text-red-500">{errors.username.message}</p>}
+          <Input
+            id="username"
+            {...register("username", { required: "Username is required" })}
+            defaultValue={defaultUserData.username} // Set default value
+          />
+          {errors.username && (
+            <p className="text-red-500">{errors.username.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="loginInfo">Login Information</Label>
-          <Input id="loginInfo" type="password" {...register("loginInfo")} />
+          <Input
+            id="loginInfo"
+            type="password"
+            {...register("loginInfo")}
+            defaultValue={defaultUserData.loginInfo} // Set default value
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="deviceInfo">Device Info</Label>
-          <Input id="deviceInfo" {...register("deviceInfo")} disabled />
+          <Input
+            id="deviceInfo"
+            {...register("deviceInfo")}
+            disabled
+            defaultValue={defaultUserData.deviceInfo} // Set default value
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="securityAnswer">Security Answer</Label>
-          <Input id="securityAnswer" type="password" {...register("securityAnswer")} />
+          <Input
+            id="securityAnswer"
+            type="password"
+            {...register("securityAnswer")}
+            defaultValue={defaultUserData.securityAnswer} // Set default value
+          />
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // Preferences Section
-function PreferencesSection({ register }: { register: any }) {
+function PreferencesSection({
+  register,
+  userData,
+}: {
+  register: any;
+  userData: any;
+}) {
+  // Provide default values to avoid accessing properties of null
+  const defaultUserData = userData || {
+    emailNotifications: "off",
+    siteNotifications: "off",
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -144,41 +319,80 @@ function PreferencesSection({ register }: { register: any }) {
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <Label htmlFor="emailNotifications">Email Notifications</Label>
-          <Switch id="emailNotifications" {...register("emailNotifications")} />
+          <Switch
+            id="emailNotifications"
+            defaultChecked={defaultUserData.emailNotifications === "on"}
+            {...register("emailNotifications")}
+          />
         </div>
         <div className="flex items-center justify-between">
           <Label htmlFor="siteNotifications">Site Notifications</Label>
-          <Switch id="siteNotifications" {...register("siteNotifications")} />
+          <Switch
+            id="siteNotifications"
+            defaultChecked={defaultUserData.siteNotifications === "on"}
+            {...register("siteNotifications")}
+          />
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // Support Section
-function SupportSection({ register, errors }: { register: any; errors: any }) {
+function SupportSection({
+  register,
+  errors,
+  userData,
+}: {
+  register: any;
+  errors: any;
+  userData: any;
+}) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Support</CardTitle>
-        <CardDescription>Submit your queries or report issues here.</CardDescription>
+        <CardDescription>
+          Submit your queries or report issues here.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Subject Input */}
         <div className="space-y-2">
           <Label htmlFor="subject">Subject</Label>
-          <Input id="subject" {...register("subject", { required: "Subject is required" })} />
-          {errors.subject && <p className="text-red-500">{errors.subject.message}</p>}
+          <Input
+            id="subject"
+            placeholder="Enter your subject..."
+            {...register("subject", { required: "Subject is required" })}
+            defaultValue={userData?.subject || ""}
+          />
+          {errors.subject && (
+            <p className="text-red-500 text-sm">{errors.subject.message}</p>
+          )}
         </div>
+
+        {/* Message Input */}
         <div className="space-y-2">
           <Label htmlFor="message">Message</Label>
-          <Textarea id="message" {...register("message", { required: "Message is required" })} />
-          {errors.message && <p className="text-red-500">{errors.message.message}</p>}
+          <Textarea
+            id="message"
+            placeholder="Describe your issue or query..."
+            {...register("message", { required: "Message is required" })}
+            defaultValue={userData?.message || ""}
+            className="min-h-[120px]"
+          />
+          {errors.message && (
+            <p className="text-red-500 text-sm">{errors.message.message}</p>
+          )}
         </div>
       </CardContent>
+
+      {/* Submit Button */}
       <CardFooter>
-        <Button type="submit">Submit Support Request</Button>
+        <Button type="submit" className="w-full">
+          Submit Support Request
+        </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
-

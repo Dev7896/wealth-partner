@@ -142,6 +142,10 @@ export default function MainPage() {
     setStocks(newStocks);
   };
 
+  const updateTransactions = (transactions) => {
+    setTransactions(transactions) ;
+  }
+
   return (
     <div className="flex">
       <Sidebar
@@ -173,18 +177,17 @@ export default function MainPage() {
             <BankIntegration
               accessToken={accessToken}
               setAccessToken={setAccessToken}
+              updateTransactions={updateTransactions}
             />
             {accessToken && (
               <RecentTransactions
-                accessToken={accessToken}
                 transactions={transactions}
-                setTransactions={setTransactions}
               />
             )}
             {transactions && transactions.length > 0 ? (
-              <Bar transactions={transactions} />
+              <Bar transactions={transactions} accessToken={accessToken} />
             ) : (
-              <p>No transactions found</p>
+              <p></p>
             )}
           </div>
         )}

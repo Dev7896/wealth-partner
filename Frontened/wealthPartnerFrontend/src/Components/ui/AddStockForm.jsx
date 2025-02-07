@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PackagePlus, List, Tag, Boxes, DollarSign } from "lucide-react";
+import { color } from "framer-motion";
 
 const AddStockForm = ({ stock, handleChange, handleSubmit, categories, error }) => {
   return (
@@ -79,8 +80,9 @@ const AddStockForm = ({ stock, handleChange, handleSubmit, categories, error }) 
               value={stock.category}
               onValueChange={(value) => handleChange({ target: { name: "category", value } })}
               required
+             
             >
-              <SelectTrigger>
+              <SelectTrigger style={{ color: "black" }}>
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>

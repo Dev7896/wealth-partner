@@ -1,94 +1,137 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Bell, Info, AlertTriangle, CheckCircle, ChevronRight } from "lucide-react"
+import { useState, useEffect } from "react";
+import {
+  Bell,
+  Info,
+  AlertTriangle,
+  CheckCircle,
+  ChevronRight,
+  Plus,
+  X,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
+import Cookies from "js-cookie";
+import { showMessage } from "../LoginSections/SignupUtility";
+import NotificationCard from "../ui/NotificationCard";
+import NotificationForm from "../ui/NotificationForm";
 
-const notificationsData = [
-  {
-    id: 1,
-    title: "New Update Available",
-    description: "A new version of the app is available. Please update.",
-    date: "Jan 31, 2025",
-    type: "info",
-    isRead: false,
-  },
-  {
-    id: 2,
-    title: "Stock Low",
-    description: "Your stock for Product X is running low.",
-    date: "Jan 30, 2025",
-    type: "warning",
-    isRead: false,
-  },
-  {
-    id: 3,
-    title: "Payment Received",
-    description: "Payment for order #12345 has been received.",
-    date: "Jan 29, 2025",
-    type: "success",
-    isRead: false,
-  },
-  // Add more notifications as needed
-]
+const fetchNotifications = async () => {
+  const email = Cookies.get("email");
+  if (!email) throw new Error("User email is missing");
+
+  const res = await fetch("http://localhost:8080/api/notifications/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }), // Send email in the body
+  });
+
+  if (!res.ok) throw new Error(`Error: ${res.status} ${res.statusText}`);
+  return res.json();
+};
+
 
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState(notificationsData)
+  const [notifications, setNotifications] = useState([]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const handleMarkAsRead = (id) => {
-    setNotifications(notifications.map((notif) => (notif.id === id ? { ...notif, isRead: true } : notif)))
+  useEffect(() => {
+    const loadNotifications = async () => {
+      try {
+        const data = await fetchNotifications();
+        setNotifications(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    loadNotifications();
+  }, []);
+
+const handleMarkAsRead = async (id, action) => {
+  try {
+    if (action === "delete") {
+      await fetch(`http://localhost:8080/api/notifications/${id}`, {
+        method: "DELETE",
+      });
+      setNotifications(notifications.filter((notif) => notif._id !== id));
+    } else {
+      await fetch(`http://localhost:8080/api/notifications/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isRead: true }),
+      });
+
+      setNotifications(
+        notifications.map((notif) =>
+          notif._id === id ? { ...notif, isRead: true } : notif
+        )
+      );
+    }
+  } catch (error) {
+    console.error("Error updating notification:", error);
   }
+};
+
+
+  const handleFormSubmit = async (formData) => {
+    try {
+      const res = await fetch("http://localhost:8080/api/notifications/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error("Failed to add notification");
+      showMessage("Notfication added successfully", "success");
+      const updatedNotifications = await fetchNotifications();
+      setNotifications(updatedNotifications);
+      setIsFormOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 flex items-center">
-        <Bell className="mr-2" /> Notifications
-      </h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold flex items-center">
+          <Bell className="mr-2" /> Notifications
+        </h1>
+        <Button
+          onClick={() => setIsFormOpen(true)}
+          className="flex items-center gap-2"
+        >
+          <Plus size={18} /> Add Notification
+        </Button>
+      </div>
+
+      {isFormOpen && (
+        <NotificationForm
+          onSubmit={handleFormSubmit}
+          onClose={() => setIsFormOpen(false)}
+        />
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {notifications.map((notification) => (
-          <NotificationCard key={notification.id} notification={notification} onMarkAsRead={handleMarkAsRead} />
+          <NotificationCard
+            key={notification._id}
+            notification={notification}
+            handleMarkAsRead={handleMarkAsRead}
+          />
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-function NotificationCard({ notification, onMarkAsRead }) {
-  const { id, title, description, date, type, isRead } = notification
-
-  const getIcon = () => {
-    switch (type) {
-      case "info":
-        return <Info className="text-blue-500" />
-      case "warning":
-        return <AlertTriangle className="text-yellow-500" />
-      case "success":
-        return <CheckCircle className="text-green-500" />
-      default:
-        return <Bell className="text-gray-500" />
-    }
-  }
-
-  return (
-    <div className={`bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-all ${isRead ? "opacity-70" : ""}`}>
-      <div className="flex items-start mb-2">
-        <div className="flex-shrink-0 mr-3">{getIcon()}</div>
-        <div className="flex-grow">
-          <h2 className="text-lg font-semibold">{title}</h2>
-          <p className="text-sm text-gray-600">{date}</p>
-        </div>
-        <div className={`w-3 h-3 rounded-full ${isRead ? "bg-gray-400" : "bg-blue-600"}`}></div>
-      </div>
-      <p className="text-gray-700 mb-4">{description}</p>
-      <div className="flex justify-end">
-        <button
-          onClick={() => onMarkAsRead(id)}
-          className="flex items-center text-sm transition-colors"
-        >
-          {isRead ? "View Details" : "Mark as Read"}
-          <ChevronRight className="ml-1 w-4 h-4" />
-        </button>
-      </div>
-    </div>
-  )
-}
 

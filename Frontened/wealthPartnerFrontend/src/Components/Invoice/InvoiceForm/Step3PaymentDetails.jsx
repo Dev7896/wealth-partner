@@ -17,8 +17,76 @@ const PaymentDetails = ({ formData, setFormData, prevStep, handleSubmit }) => {
   };
 
   return (
-    <form onSubmit={submitForm} className="space-y-6 p-6 bg-white shadow-md rounded-md w-full flex flex-col ">
+    <form onSubmit={submitForm} className="space-y-6 p-6 bg-white shadow-md rounded-md w-full flex flex-col h-auto">
       <h2 className="text-3xl font-bold text-gray-800">Payment Details</h2>
+
+      {/* Customer Name */}
+      <div className="flex flex-col">
+        <label htmlFor="customerName" className="text-sm font-medium text-gray-700">
+          Customer Name
+        </label>
+        <input
+          type="text"
+          id="customerName"
+          name="customerName"
+          value={formData.companyName || ""}
+          onChange={handleChange}
+          required
+          placeholder="Enter customer's full name"
+          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
+        />
+      </div>
+
+      {/* Customer Address */}
+      <div className="flex flex-col">
+        <label htmlFor="customerAddress" className="text-sm font-medium text-gray-700">
+          Customer Address
+        </label>
+        <textarea
+          id="customerAddress"
+          name="customerAddress"
+          value={formData.companyAddress || ""}
+          onChange={handleChange}
+          required
+          placeholder="Enter customer's full address"
+          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          rows="3"
+        />
+      </div>
+
+      {/* Customer Email */}
+      <div className="flex flex-col">
+        <label htmlFor="customerEmail" className="text-sm font-medium text-gray-700">
+          Email Address
+        </label>
+        <input
+          type="email"
+          id="customerEmail"
+          name="customerEmail"
+          value={formData.companyEmail || ""}
+          onChange={handleChange}
+          required
+          placeholder="Enter customer's email"
+          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Customer Phone */}
+      <div className="flex flex-col">
+        <label htmlFor="customerPhone" className="text-sm font-medium text-gray-700">
+          Phone Number
+        </label>
+        <input
+          type="tel"
+          id="customerPhone"
+          name="customerPhone"
+          value={formData.companyPhone || ""}
+          onChange={handleChange}
+          required
+          placeholder="Enter customer's phone number"
+          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
       {/* Payment Method */}
       <div className="flex flex-col">
@@ -86,7 +154,7 @@ const PaymentDetails = ({ formData, setFormData, prevStep, handleSubmit }) => {
         </button>
         <button
           type="submit"
-          className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+          className="px-6 py-2  text-white rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2"
         >
           Submit
         </button>

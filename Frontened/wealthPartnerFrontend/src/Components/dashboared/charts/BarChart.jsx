@@ -20,43 +20,39 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+import axios from "axios";
 
 const BarChart = ({ accessToken }) => {
-  const [chartLabel, setChartLabel] = useState("Monthly Expense");
-  const [yearlyTransactions, setYearlyTransactions] = useState([]);
-  let chartData  = [] ;
+  const [chartLabel, setChartLabel] = useState("yearly Expense");
+  const [monthlyTransactions, setMonthlyTransactions] = useState([]);
 
   useEffect(() => {
     if (accessToken) {
-      // Fetch yearly transactions from the backend
       axios
         .post("http://localhost:8080/api/plaid/yearly-transactions", {
           accessToken,
         })
         .then((res) => {
-          setYearlyTransactions(res.data.transactions); // Set yearly transactions
-          chartData = prepareChartData(yearlyTransactions);
+          const formattedData = prepareChartData(res.data.transactions);
+          setMonthlyTransactions(formattedData);
+          // console.log(res.data.transactions)
         })
-        .catch((err) =>
-          console.error("Error fetching yearly transactions:", err)
-        );
+        .catch((err) => console.error("Error fetching transactions:", err));
     }
   }, [accessToken]);
 
-  // Transform yearly data to chart format
+  // Function to group transactions by month
   const prepareChartData = (transactions) => {
-    if (!transactions || transactions.length === 0) return null;
+    if (!transactions || transactions.length === 0) return [];
 
-    // Prepare chart data from the transactions (you can adjust this logic as needed)
-    const years = [];
-    const amounts = [];
+    const monthlyData = Array(12).fill(0); // Initialize array for 12 months
 
     transactions.forEach((txn) => {
-      const year = new Date(txn.date).getFullYear();
-      if (!years.includes(year)) years.push(year);
-      amounts.push(txn.amount);
+      const month = new Date(txn.date).getMonth(); // Get month (0 = Jan, 11 = Dec)
+      monthlyData[month] += txn.amount; // Add amount to corresponding month
     });
-    return amounts ;
+    // console.log(monthlyData) ;
+    return monthlyData;
   };
 
   const data = {
@@ -77,8 +73,8 @@ const BarChart = ({ accessToken }) => {
     datasets: [
       {
         label: "Expenses",
-        data: chartData.length
-          ? chartData
+        data: monthlyTransactions.length
+          ? monthlyTransactions
           : [
               1200, 1900, 300, 500, 2000, 2300, 1800, 1500, 2200, 3000, 1800,
               2100,

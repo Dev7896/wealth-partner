@@ -14,7 +14,7 @@ const Step1CustomerDetails = ({ formData, setFormData, nextStep }) => {
   return (
     <form
       onSubmit={handleNext}
-      className="space-y-6 p-6 bg-white shadow-md rounded-md flex flex-col w-full overflow-auto"
+      className="space-y-6 p-6 bg-white shadow-md rounded-md flex flex-col w-full h-auto"
     >
       <h2 className="text-3xl font-bold text-gray-800">Customer Details</h2>
 
@@ -31,7 +31,7 @@ const Step1CustomerDetails = ({ formData, setFormData, nextStep }) => {
           onChange={handleChange}
           required
           placeholder="Enter customer's full name"
-          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         />
       </div>
 
@@ -106,7 +106,7 @@ const Step1CustomerDetails = ({ formData, setFormData, nextStep }) => {
       <div className="text-right">
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2  text-white rounded-md hover:shadow-2xl focus:outline-none focus:ring-2 "
         >
           Next
         </button>

@@ -1,23 +1,37 @@
 import { useState, useEffect } from "react";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Pencil, Trash2, Search, IndianRupee } from "lucide-react";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
+import EditStockForm from "../ui/EditStockFrom";
 
-const ManageStocks = ({updateReport}) => {
+const ManageStocks = ({ updateReport }) => {
   const [stocks, setStocks] = useState([]);
   const [search, setSearch] = useState("");
+  const [editStock, setEditStock] = useState(null);
 
   useEffect(() => {
     fetchStocks();
   }, []);
+
   const fetchStocks = async () => {
-    const email = Cookies.get("email"); // Get the email from cookies
+    const email = Cookies.get("email");
     try {
-      // Send the email as a query parameter in the GET request
       const response = await fetch(
         `http://localhost:8080/api/stocks?email=${email}`
       );
       const data = await response.json();
-      setStocks(data.stocks); // Update stocks state
+      setStocks(data.stocks);
       updateReport(data.stocks);
     } catch (error) {
       console.error("Error fetching stocks:", error);
@@ -27,82 +41,128 @@ const ManageStocks = ({updateReport}) => {
   const handleSell = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/stocks/sell/${id}`,  // Corrected URL
+        `http://localhost:8080/api/stocks/sell/${id}`,
         {
           method: "PATCH",
-          headers: {
-            "Content-Type": "application/json", // Ensure headers are set
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
-      // console.log(response);
       if (response.ok) {
         Swal.fire("Success", "Stock sold successfully!", "success");
-        fetchStocks(); // Refresh stock list after selling
+        fetchStocks();
       } else {
         const data = await response.json();
-        console.log(data);
         Swal.fire("Error", data.error || "Failed to sell stock", "error");
       }
     } catch (error) {
       console.error("Error selling stock:", error);
     }
   };
-  
+
+  const handleEditClick = (stock) => {
+    setEditStock(stock);
+  };
+
+  const handleUpdateStock = async (formData) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/stocks/${formData.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+      if (response.ok) {
+        Swal.fire("Success", "Stock updated successfully!", "success");
+        fetchStocks();
+        setEditStock(null);
+      } else {
+        Swal.fire("Error", "Failed to update stock", "error");
+      }
+    } catch (error) {
+      console.error("Error updating stock:", error);
+    }
+  };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg mt-8">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-        Manage Stocks
-      </h2>
+    <Card className="p-6 shadow-xl rounded-lg mt-8 bg-white">
+      <h2 className="text-3xl font-bold text-gray-900 mb-6">Manage Stocks</h2>
 
-      <input
-        type="text"
-        placeholder="Search stocks..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="mb-4 p-2 w-full border border-gray-300 rounded-md focus:ring-blue-500"
-      />
+      <div className="flex items-center gap-4 mb-6">
+        <Input
+          type="text"
+          placeholder="Search stocks..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full border-gray-300"
+        />
+        <Button
+          variant="outline"
+          className="border-gray-300 text-black shadow-xl"
+        >
+          <Search className="w-5 h-5" />
+        </Button>
+      </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border p-3">Stock Name</th>
-              <th className="border p-3">Category</th>
-              <th className="border p-3">Quantity</th>
-              <th className="border p-3">Price</th>
-              <th className="border p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-center">Stock Name</TableHead>
+              <TableHead className="text-center">Category</TableHead>
+              <TableHead className="text-center">Quantity</TableHead>
+              <TableHead className="text-center">Price</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {stocks
               .filter((stock) =>
                 stock.name.toLowerCase().includes(search.toLowerCase())
               )
               .map((stock) => (
-                <tr key={stock._id} className="text-center">
-                  <td className="border p-3">{stock.name}</td>
-                  <td className="border p-3">{stock.category.name}</td>
-                  <td className="border p-3">{stock.quantity}</td>
-                  <td className="border p-3">${stock.price}</td>
-                  <td className="border p-3 flex justify-center gap-3">
-                    <button
+                <TableRow key={stock._id} className="text-center">
+                  <TableCell>{stock.name}</TableCell>
+                  <TableCell>{stock.category.name}</TableCell>
+                  <TableCell>{stock.quantity}</TableCell>
+                  <TableCell>
+                    <div className="flex justify-center items-center">
+                      <IndianRupee size={16} /> {stock.price}
+                    </div>
+                  </TableCell>
+                  <TableCell className="flex justify-center gap-3">
+                    <Button
+                      className={" bg-white hover:shadow-xl "}
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleSell(stock._id)}
-                      className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
                     >
-                      Sell
-                    </button>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                      Edit
-                    </button>
-                  </td>
-                </tr>
+                      <Trash2 className="w-5 h-5 text-red-500" />
+                    </Button>
+                    <Button
+                      className={" bg-white hover:shadow-xl"}
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleEditClick(stock)}
+                    >
+                      <Pencil className="w-5 h-5 text-blue-500" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
               ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
-    </div>
+
+      {editStock && (
+        <EditStockForm
+          stock={editStock}
+          onClose={() => setEditStock(null)}
+          handleUpdateStock={handleUpdateStock}
+        />
+      )}
+    </Card>
   );
 };
 

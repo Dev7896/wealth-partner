@@ -21,7 +21,7 @@ const InvoiceFormWrapper = ({handleFormSubmit}) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-lg">
+    <div className=" mx-auto mt-10 bg-gray-50 shadow-lg rounded-lg">
       {step === 1 && (
         <Step1CustomerDetails
           formData={formData}
