@@ -51,16 +51,16 @@ const updateStock = async (req, res) => {
   const { name, quantity, price, category } = req.body;
 
   try {
-    // Validate category
-    const existingCategory = await Category.findById(category);
+    // Validate category and get its ObjectId
+    const existingCategory = await Category.findOne({ name: category });
     if (!existingCategory) {
       return res.status(400).json({ message: "Invalid category" });
     }
 
-    // Find and update the stock item
+    // Use the category's ObjectId instead of its name
     const updatedStock = await Stock.findByIdAndUpdate(
       id,
-      { name, quantity, price, category },
+      { name, quantity, price, category: existingCategory._id },  // Use ObjectId
       { new: true }
     );
 
@@ -68,14 +68,13 @@ const updateStock = async (req, res) => {
       return res.status(404).json({ message: "Stock not found" });
     }
 
-    res
-      .status(200)
-      .json({ message: "Stock updated successfully", stock: updatedStock });
+    res.status(200).json({ message: "Stock updated successfully", stock: updatedStock });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Delete Stock
 const deleteStock = async (req, res) => {

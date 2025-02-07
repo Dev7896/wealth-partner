@@ -6,6 +6,8 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const paymentRoutes = require("./routes/paymentRoutes.js");
 const plaidRoutes = require("./controllers/plaidController.js");
 const salesRoutes = require('./routes/salesRoutes.js');
+const notificationRoutes = require('./routes/Notifications.js')
+const userProfileRoutes = require('./routes/userProfileRoutes.js')
 const cors = require("cors");
 require("dotenv").config();
 const { checkEmail } = require("./middlewares/checkEmail");
@@ -40,5 +42,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/plaid", plaidRoutes);
 app.use("/api/sales", salesRoutes);
+app.use('/api/notifications', notificationRoutes)
+app.use('/api/user', userProfileRoutes)
 
 app.listen(port, () => console.log(`listening on port ${port}`));

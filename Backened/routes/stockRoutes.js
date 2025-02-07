@@ -12,6 +12,6 @@ const router = express.Router();
 router.post("/add", addStock);
 router.get("/", getAllStocks);
 router.patch("/sell/:id", handleSell);
-router.delete("/:id", deleteStock);
+router.patch("/:id", updateStock);
 
 module.exports = router;
