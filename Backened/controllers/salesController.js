@@ -22,6 +22,8 @@ const getAllSales = async (req, res) => {
         totalSales: 0,
         totalRevenue: 0,
         totalStocks, // Set totalStocks from calculated value
+        income: [],
+        expenses: [],
       });
       // console.log("New sales record created successfully");
     } else {
@@ -34,6 +36,8 @@ const getAllSales = async (req, res) => {
       totalSales: sales.totalSales,
       totalRevenue: sales.totalRevenue,
       totalStocks: sales.totalStocks, 
+      incomeData : sales.income ,
+      expensesData : sales.expenses
     });
   } catch (error) {
     console.error("Error fetching sales data:", error.message);

@@ -1,7 +1,7 @@
 const Category = require("../models/category");
 const Stock = require("../models/stock");
 const Sale = require("../models/sales");
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 // Add New Stock
 const addStock = async (req, res) => {
   try {
@@ -23,6 +23,29 @@ const addStock = async (req, res) => {
     });
 
     await newStock.save();
+
+    // Find or create a sales record for the user
+    let sales = await Sale.findOne({ email });
+    if (!sales) {
+      sales = new Sale({
+        email,
+        totalSales: 0,
+        totalRevenue: 0,
+        income: [],
+        expenses: [],
+      });
+    }
+
+    // Add to expenses array
+    sales.expenses.push({
+      stockName: name,
+      price: price,
+      quantity: quantity,
+      time: new Date(),
+    });
+
+    await sales.save();
+
     res
       .status(201)
       .json({ message: "Stock added successfully", stock: newStock });
@@ -60,7 +83,7 @@ const updateStock = async (req, res) => {
     // Use the category's ObjectId instead of its name
     const updatedStock = await Stock.findByIdAndUpdate(
       id,
-      { name, quantity, price, category: existingCategory._id },  // Use ObjectId
+      { name, quantity, price, category: existingCategory._id }, // Use ObjectId
       { new: true }
     );
 
@@ -68,13 +91,42 @@ const updateStock = async (req, res) => {
       return res.status(404).json({ message: "Stock not found" });
     }
 
-    res.status(200).json({ message: "Stock updated successfully", stock: updatedStock });
+    const sales = await Sale.findOne({ email: updatedStock.email });
+
+    // Check if stock already exists in expenses
+    const existingExpenseIndex = sales.expenses.findIndex(
+      (item) => item.stockName === updatedStock.name
+    );
+
+    if (existingExpenseIndex !== -1) {
+      // If it exists, update it
+      sales.expenses[existingExpenseIndex] = {
+        ...sales.expenses[existingExpenseIndex],
+        stockName: name,
+        price,
+        quantity,
+      };
+    } else {
+      // If it doesn't exist, add it as a new entry
+      sales.expenses.push({
+        stockName: name,
+        price,
+        quantity,
+        time: new Date(), // Current time
+      });
+    }
+
+    // Save updated sales document
+    await sales.save();
+
+    res
+      .status(200)
+      .json({ message: "Stock updated successfully", stock: updatedStock });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 // Delete Stock
 const deleteStock = async (req, res) => {
@@ -108,8 +160,9 @@ const handleSell = async (req, res) => {
       return res.status(400).json({ error: "Stock is already empty" });
     }
 
-    const email = stock.email;
-    const price = stock.price;
+    // const email = stock.email;
+    // const price = stock.price;
+    const { email, name, price } = stock;
 
     // Reduce stock quantity by 1
     stock.quantity -= 1;
@@ -122,11 +175,22 @@ const handleSell = async (req, res) => {
         email,
         totalSales: 0,
         totalRevenue: 0,
+        income: [],
+        expenses: [],
       });
     }
 
     sales.totalSales += 1;
     sales.totalRevenue += price;
+
+    // Add to income array
+    sales.income.push({
+      stockName: name,
+      price: price,
+      quantity: 1,
+      time: new Date(),
+    });
+
     await sales.save();
 
     res.json({ message: "Stock sold successfully" });
@@ -135,8 +199,6 @@ const handleSell = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
 
 module.exports = {
   addStock,
