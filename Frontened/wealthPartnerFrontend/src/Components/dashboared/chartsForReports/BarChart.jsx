@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import "../../../styles/charts.css";
 import {
   Chart as ChartJS,
   CategoryScale, // For the "category" scale
@@ -20,65 +19,32 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-import axios from "axios";
 
-const BarChart = ({ accessToken }) => {
+const BarChart = ({ expensesData }) => {
   const [chartLabel, setChartLabel] = useState("Monthly Expense");
-  const [monthlyTransactions, setMonthlyTransactions] = useState([]);
+  const [monthlyExpenses, setMonthlyExpenses] = useState({
+    expensesChartLabels: [],
+    expensesChartData: [],
+  });
 
   useEffect(() => {
-    if (accessToken) {
-      axios
-        .post("http://localhost:8080/api/plaid/yearly-transactions", {
-          accessToken,
-        })
-        .then((res) => {
-          const formattedData = prepareChartData(res.data.transactions);
-          setMonthlyTransactions(formattedData);
-          // console.log(res.data.transactions)
-        })
-        .catch((err) => console.error("Error fetching transactions:", err));
+    if (expensesData && expensesData.expensesChartLabels && expensesData.expensesChartData) {
+      setMonthlyExpenses(expensesData);
     }
-  }, [accessToken]);
-
-  // Function to group transactions by month
-  const prepareChartData = (transactions) => {
-    if (!transactions || transactions.length === 0) return [];
-
-    const monthlyData = Array(12).fill(0); // Initialize array for 12 months
-
-    transactions.forEach((txn) => {
-      const month = new Date(txn.date).getMonth(); // Get month (0 = Jan, 11 = Dec)
-      monthlyData[month] += txn.amount; // Add amount to corresponding month
-    });
-    // console.log(monthlyData) ;
-    return monthlyData;
-  };
+  }, [expensesData]);
 
   const data = {
-    labels: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ], // Months of the year
+    labels:
+      monthlyExpenses.expensesChartLabels.length > 0
+        ? monthlyExpenses.expensesChartLabels
+        : ["January", "February", "March", "April", "May", "June"],
     datasets: [
       {
         label: "Expenses",
-        data: monthlyTransactions.length
-          ? monthlyTransactions
-          : [
-              1200, 1900, 300, 500, 2000, 2300, 1800, 1500, 2200, 3000, 1800,
-              2100,
-            ], // Default if no data
+        data:
+          monthlyExpenses.expensesChartData.length > 0
+            ? monthlyExpenses.expensesChartData
+            : [1200, 1900, 300, 500, 2000, 2300],
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -160,6 +126,10 @@ const BarChart = ({ accessToken }) => {
       },
     },
   };
+  const handlechange = (value) => {
+    setChartLabel(value);
+    // console.log(chartLabel);
+  };
 
   return (
     <div className="w-full h-64 sm:h-80 md:h-96 lg:h-[400px]">
@@ -167,5 +137,4 @@ const BarChart = ({ accessToken }) => {
     </div>
   );
 };
-
 export default BarChart;

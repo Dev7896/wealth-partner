@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import '../../../styles/charts.css' ;
 import {
@@ -23,20 +23,21 @@ ChartJS.register(
   Legend
 );
 
-const LineChart = () => {
+const LineChart = ({incomeData , expensesData}) => {
+  console.log(incomeData ,expensesData) ;
   const data = {
     labels: ["January", "February", "March", "April", "May", "June"],
     datasets: [
       {
         label: "Expense Trend",
-        data: [1200, 1900, 300, 500, 2000, 2300],
+        data: expensesData?.expensesChartData.length > 0 ?  expensesData?.expensesChartData :  [1500, 2500, 800, 700, 2500, 2800],
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         tension: 0.4, // Adds curve to the lines
       },
       {
         label: "Income",
-        data: [1500, 2500, 800, 700, 2500, 2800],
+        data: incomeData?.incomeChartData.length > 0 ? incomeData?.incomeChartData :  [1200, 1900, 300, 500, 2000, 2300],
         backgroundColor: "rgba(75, 192, 192, 0.5)",
         borderColor: "rgba(75, 192, 192, 1)",
         tension: 0.4,

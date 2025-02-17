@@ -5,8 +5,8 @@ import PaymentDetails from "./Step3PaymentDetails";
 import { prepareData } from "../InvoiceUtils";
 import { showMessage } from "../../LoginSections/SignupUtility";
 
-const InvoiceFormWrapper = ({handleFormSubmit}) => {
-  const [formData, setFormData] = useState({});
+const InvoiceFormWrapper = ({ formData, setFormData, handleFormSubmit }) => {
+  // const [formData, setFormData] = useState({});
   const [step, setStep] = useState(1);
 
   const nextStep = () => setStep(step + 1);
@@ -16,8 +16,7 @@ const InvoiceFormWrapper = ({handleFormSubmit}) => {
     const invoiceData = prepareData(formData);
     // console.log("Final Form Data:", formData);
     showMessage("invoice submiited succesfully", "success");
-    handleFormSubmit(invoiceData) ;
-
+    handleFormSubmit(invoiceData);
   };
 
   return (

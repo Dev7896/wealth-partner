@@ -22,33 +22,33 @@ const PaymentDetails = ({ formData, setFormData, prevStep, handleSubmit }) => {
 
       {/* Customer Name */}
       <div className="flex flex-col">
-        <label htmlFor="customerName" className="text-sm font-medium text-gray-700">
-          Customer Name
+        <label htmlFor="companyName" className="text-sm font-medium text-gray-700">
+          Enter the company's Name
         </label>
         <input
           type="text"
-          id="customerName"
-          name="customerName"
+          id="companyName"
+          name="companyName"
           value={formData.companyName || ""}
           onChange={handleChange}
           required
-          placeholder="Enter customer's full name"
+          placeholder="Enter company's full name"
           className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         />
       </div>
 
       {/* Customer Address */}
       <div className="flex flex-col">
-        <label htmlFor="customerAddress" className="text-sm font-medium text-gray-700">
-          Customer Address
+        <label htmlFor="companyAddress" className="text-sm font-medium text-gray-700">
+        companyAddress
         </label>
         <textarea
-          id="customerAddress"
-          name="customerAddress"
+          id="companyAddress"
+          name="companyAddress"
           value={formData.companyAddress || ""}
           onChange={handleChange}
           required
-          placeholder="Enter customer's full address"
+          placeholder="Enter company's full address"
           className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           rows="3"
         />
@@ -56,34 +56,34 @@ const PaymentDetails = ({ formData, setFormData, prevStep, handleSubmit }) => {
 
       {/* Customer Email */}
       <div className="flex flex-col">
-        <label htmlFor="customerEmail" className="text-sm font-medium text-gray-700">
+        <label htmlFor="companyEmail" className="text-sm font-medium text-gray-700">
           Email Address
         </label>
         <input
           type="email"
-          id="customerEmail"
-          name="customerEmail"
+          id="companyEmail"
+          name="companyEmail"
           value={formData.companyEmail || ""}
           onChange={handleChange}
           required
-          placeholder="Enter customer's email"
+          placeholder="Enter company's email"
           className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       {/* Customer Phone */}
       <div className="flex flex-col">
-        <label htmlFor="customerPhone" className="text-sm font-medium text-gray-700">
-          Phone Number
+        <label htmlFor="companyPhone" className="text-sm font-medium text-gray-700">
+        companyPhone
         </label>
         <input
           type="tel"
-          id="customerPhone"
-          name="customerPhone"
+          id="companyPhone"
+          name="companyPhone"
           value={formData.companyPhone || ""}
           onChange={handleChange}
           required
-          placeholder="Enter customer's phone number"
+          placeholder="Enter company's phone number"
           className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -128,7 +128,7 @@ const PaymentDetails = ({ formData, setFormData, prevStep, handleSubmit }) => {
       </div>
 
       {/* Total Amount */}
-      <div className="flex flex-col">
+      {/* <div className="flex flex-col">
         <label htmlFor="totalAmount" className="text-sm font-medium text-gray-700">
           Total Amount
         </label>
@@ -142,7 +142,7 @@ const PaymentDetails = ({ formData, setFormData, prevStep, handleSubmit }) => {
           placeholder="Enter total amount"
           className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-      </div>
+      </div> */}
 
       {/* Buttons */}
       <div className="flex justify-between">

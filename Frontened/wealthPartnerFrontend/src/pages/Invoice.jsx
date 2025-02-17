@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import InvoiceFormWrapper from "../Components/Invoice/InvoiceForm/InvoiceFormWrapper";
 import InvoicePreview from "../Components/Invoice/InvoicePreview/InvoicePreview";
-import { prepareData ,  } from "../Components/Invoice/InvoiceUtils"; // Utility function to create invoiceData
+import { prepareData } from "../Components/Invoice/InvoiceUtils"; // Utility function to create invoiceData
 import jsPDF from "jspdf";
 
 const Invoice = () => {
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
   const [invoiceData, setInvoiceData] = useState(null);
+  const [formData, setFormData] = useState({});
 
   const handleFormSubmit = (formData) => {
     const preparedInvoiceData = prepareData(formData);
@@ -31,7 +32,9 @@ const Invoice = () => {
     doc.text("Items:", 10, 70);
     invoiceData.items.forEach((item, index) => {
       doc.text(
-        `${index + 1}. ${item.name} (Qty: ${item.quantity}, Price: $${item.price})`,
+        `${index + 1}. ${item.name} (Qty: ${item.quantity}, Price: $${
+          item.price
+        })`,
         10,
         80 + index * 10
       );
@@ -46,12 +49,11 @@ const Invoice = () => {
   return (
     <div className="container mx-auto p-6">
       {!isPreviewVisible ? (
-        <InvoiceFormWrapper handleFormSubmit={handleFormSubmit} />
+        <InvoiceFormWrapper formData={formData} setFormData={setFormData} handleFormSubmit={handleFormSubmit} />
       ) : (
         <InvoicePreview
           invoiceData={invoiceData}
           onEdit={() => setIsPreviewVisible(false)} // Allow editing
-          onDownload={handleDownloadInvoice} // Download PDF
         />
       )}
     </div>
